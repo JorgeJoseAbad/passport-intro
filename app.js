@@ -16,8 +16,10 @@ const bcrypt        = require("bcrypt");
 const passport      = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("./models/user");
+const flash = require("connect-flash");
+//const ensureLogin = require("connect-ensure-login");
 
-
+mongoose.Promise=global.Promise;
 //cambio el nombre BD de passport-local, que ya existe, a passport-Intro
 mongoose.connect("mongodb://localhost/passport-intro");
 
@@ -35,9 +37,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', authRoutes);
-app.use('/', index);
-app.use('/users', users);
+
 
 //conf express-session
 app.use(session({
@@ -46,19 +46,25 @@ app.use(session({
   saveUninitialized: true
 }));
 
+
 //codigo que debe ir antes de passport.initialize() según la lección
 passport.serializeUser((user, cb) => {
+  console.log("----serializeUser");
   cb(null, user.id);
 });
 
 passport.deserializeUser((id, cb) => {
+  console.log("-----deserializeUser");
   User.findOne({ "_id": id }, (err, user) => {
     if (err) { return cb(err); }
     cb(null, user);
   });
 });
 
-passport.use(new LocalStrategy((username, password, next) => {
+//app.use(flash()); descomentar luego
+
+passport.use(new LocalStrategy(( username, password, next) => {
+  console.log("-----LocalStrategy");
   User.findOne({ username }, (err, user) => {
     if (err) {
       return next(err);
@@ -74,9 +80,15 @@ passport.use(new LocalStrategy((username, password, next) => {
   });
 }));
 
-
+//estas lineas estaban arriba
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use('/', authRoutes);
+app.use('/', index);
+app.use('/users', users);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
