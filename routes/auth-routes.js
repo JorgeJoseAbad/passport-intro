@@ -17,7 +17,7 @@ const bcryptSalt = 10;
 
 
 authRoutes.get("/login", (req, res, next) => {
-  res.render("auth/login");
+  res.render("auth/login", { "message": req.flash("error") });
 });
 
 authRoutes.post("/login", passport.authenticate("local", {
@@ -69,6 +69,11 @@ authRoutes.post("/signup", (req, res, next) => {
 
 authRoutes.get("/private-page", ensureLogin.ensureLoggedIn(), (req, res) => {
   res.render("private", { user: req.user });
+});
+
+authRoutes.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect("/login");
 });
 
 module.exports = authRoutes;
