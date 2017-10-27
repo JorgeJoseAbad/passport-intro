@@ -17,7 +17,7 @@ const passport      = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("./models/user");
 const flash = require("connect-flash");
-//const ensureLogin = require("connect-ensure-login");
+
 
 mongoose.Promise=global.Promise;
 //cambio el nombre BD de passport-local, que ya existe, a passport-Intro
