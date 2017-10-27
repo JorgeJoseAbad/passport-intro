@@ -73,7 +73,8 @@ authRoutes.get("/private-page", ensureLogin.ensureLoggedIn(), (req, res) => {
 
 authRoutes.get("/logout", (req, res) => {
   req.logout();
-  res.redirect("/login");
+  //res.redirect("/login");
+  res.redirect("/");
 });
 
 module.exports = authRoutes;
