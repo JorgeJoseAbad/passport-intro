@@ -21,7 +21,11 @@ const flash = require("connect-flash");
 
 mongoose.Promise=global.Promise;
 //cambio el nombre BD de passport-local, que ya existe, a passport-Intro
-mongoose.connect("mongodb://localhost/passport-intro");
+mongoose.connect("mongodb://localhost/passport-intro",{
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}
+);
 
 var app = express();
 
