@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  debugger;
+
   let thatUsername;
   if (req.user!== undefined){
     thatUsername = req.user.username;
