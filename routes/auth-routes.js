@@ -66,7 +66,6 @@ authRoutes.post("/signup", (req, res, next) => {
 });
 
 
-
 authRoutes.get("/private-page", ensureLogin.ensureLoggedIn(), (req, res) => {
   res.render("private", { user: req.user });
 });

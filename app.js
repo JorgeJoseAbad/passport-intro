@@ -1,30 +1,30 @@
 /* jshint esversion:6 */
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express       = require('express');
+const path          = require('path');
+const favicon       = require('serve-favicon');
+const logger        = require('morgan');
+const cookieParser  = require('cookie-parser');
+const bodyParser    = require('body-parser');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-const mongoose = require("mongoose");
-const authRoutes = require("./routes/auth-routes");
+const index         = require('./routes/index');
+const users         = require('./routes/users');
+const mongoose      = require("mongoose");
+const authRoutes    = require("./routes/auth-routes");
 const session       = require("express-session");
 const bcrypt        = require("bcrypt");
 const passport      = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("./models/user");
-const flash = require("connect-flash");
+const User          = require("./models/user");
+const flash         = require("connect-flash");
 
 
-mongoose.Promise=global.Promise;
+mongoose.Promise = global.Promise;
 //cambio el nombre BD de passport-local, que ya existe, a passport-Intro
 mongoose.connect("mongodb://localhost/passport-intro",{
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
 );
 
 var app = express();
@@ -41,8 +41,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
 //conf express-session
 app.use(session({
   secret: "our-passport-local-strategy-app",
@@ -50,22 +48,6 @@ app.use(session({
   saveUninitialized: true
 }));
 
-
-//codigo que debe ir antes de passport.initialize() según la lección
-passport.serializeUser((user, cb) => {
-  console.log("----serializeUser");
-  cb(null, user.id);
-});
-
-passport.deserializeUser((id, cb) => {
-  console.log("-----deserializeUser");
-  User.findOne({ "_id": id }, (err, user) => {
-    if (err) { return cb(err); }
-    cb(null, user);
-  });
-});
-
-app.use(flash()); //descomentar luego
 
 passport.use(new LocalStrategy({
   passReqToCallback: true
@@ -86,9 +68,26 @@ passport.use(new LocalStrategy({
   });
 }));
 
+//codigo que debe ir antes de passport.initialize() según la lección
+passport.serializeUser((user, cb) => {
+  console.log("----serializeUser");
+  cb(null, user.id);
+});
+
+passport.deserializeUser((id, cb) => {
+  console.log("-----deserializeUser");
+  User.findOne({ "_id": id }, (err, user) => {
+    if (err) { return cb(err); }
+    cb(null, user);
+  });
+});
+
+
 //estas lineas estaban arriba
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(flash());
 
 app.use('/', authRoutes);
 app.use('/', index);
