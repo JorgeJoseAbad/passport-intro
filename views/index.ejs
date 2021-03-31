@@ -6,7 +6,11 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <p>Welcome to <%= title %><%if (username!==undefined) {%>
+      , <%=username%>
+    <%}%>
+    </p>
+
     <a href="/signup">signup</a>
     <a href="/login">Login</a>
     <a href="/private-page">Private-page</a>

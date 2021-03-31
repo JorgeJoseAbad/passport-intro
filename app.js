@@ -48,7 +48,7 @@ app.use(session({
   saveUninitialized: true
 }));
 
-
+//conf passport
 passport.use(new LocalStrategy({
   passReqToCallback: true
 },(req, username, password, next) => {
@@ -68,7 +68,6 @@ passport.use(new LocalStrategy({
   });
 }));
 
-//codigo que debe ir antes de passport.initialize() según la lección
 passport.serializeUser((user, cb) => {
   console.log("----serializeUser");
   cb(null, user.id);
@@ -82,8 +81,6 @@ passport.deserializeUser((id, cb) => {
   });
 });
 
-
-//estas lineas estaban arriba
 app.use(passport.initialize());
 app.use(passport.session());
 

@@ -3,7 +3,16 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  debugger;
+  let thatUsername;
+  if (req.user!== undefined){
+    thatUsername = req.user.username;
+  } else thatUsername = undefined
+
+  res.render('index', {
+    title: 'Test with passport',
+    username: thatUsername
+  });
 });
 
 module.exports = router;
